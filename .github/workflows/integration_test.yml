@@ -21,6 +21,8 @@ jobs:
       with:
         repository: PyO3/setuptools-rust
         path: setuptools-rust
+        # last version with Python 3.6 support (TODO drop in the future):
+        ref: v1.1.2
     - name: Copy setuptools-rust Hello World example to current dir
       run: cp -r setuptools-rust/examples/hello-world/* ./
     - name: Run action
