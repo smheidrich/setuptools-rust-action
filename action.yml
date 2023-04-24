@@ -1,7 +1,14 @@
 name: 'setuptools-rust'
 description: 'Build setuptools-rust packages using cibuildwheel'
 inputs:
+  dummy-input:
+    description: 'Dummy input'
+    required: false
+    default: 'dummy'
 outputs:
+  dummy-output:
+    description: 'Dummy output'
+    value: 42
 runs:
   using: "composite"
   steps:
