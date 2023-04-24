@@ -1,7 +1,14 @@
 name: 'setuptools-rust'
 description: 'Build setuptools-rust packages using cibuildwheel'
 inputs:
+  dummy-input:
+    description: 'Dummy input'
+    required: false
+    default: 'dummy'
 outputs:
+  dummy-output:
+    description: 'Dummy output'
+    value: 42
 runs:
   using: "composite"
   steps:
@@ -29,6 +36,7 @@ runs:
       run: >
         echo "MAIN_DIR=$PWD" >> "$GITHUB_ENV";
         echo "OUTER_HOME=$HOME" >> "$GITHUB_ENV";
+        echo "SETUPTOOLS_RUST_ACTION_PATH=$GITHUB_ACTION_PATH" >> "$GITHUB_ENV";
         cat "$GITHUB_ENV"
       shell: bash
     - name: Build wheels
@@ -37,6 +45,7 @@ runs:
         CIBW_SKIP: >
           *musllinux*
         CIBW_ENVIRONMENT_LINUX: >
+          ACTION_SCRIPTS_DIR="/host/${{ env.SETUPTOOLS_RUST_ACTION_PATH }}"
           HOST_HOME_DIR="/host/${{ env.OUTER_HOME }}"
           HOST_PROJ_DIR="/host/${{ env.MAIN_DIR }}"
           PROJ_DIR="/project"
@@ -49,6 +58,7 @@ runs:
           CARGO_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.cargo"
           RUSTUP_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.rustup"
         CIBW_ENVIRONMENT_MACOS: >
+          ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
@@ -61,6 +71,7 @@ runs:
           CARGO_HOME_UNIX="$HOME/.cargo"
           RUSTUP_HOME_UNIX="$HOME/.rustup"
         CIBW_ENVIRONMENT_WINDOWS: >
+          ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
@@ -74,21 +85,21 @@ runs:
           RUSTUP_HOME_UNIX="${{ env.OUTER_HOME }}/.rustup"
         CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_BEFORE_BUILD_LINUX: >
-          bash $PROJ_DIR/ci-utils/before-build-linux.sh
+          bash $ACTION_SCRIPTS_DIR/before-build-linux.sh
         CIBW_BEFORE_BUILD_MACOS: >
-          bash $PROJ_DIR/ci-utils/before-build-mac.sh
+          bash $ACTION_SCRIPTS_DIR/before-build-mac.sh
         CIBW_BEFORE_BUILD_WINDOWS: >
-          bash ci-utils/before-build-win.sh
+          bash %ACTION_SCRIPTS_DIR%/before-build-win.sh
         CIBW_REPAIR_WHEEL_COMMAND_LINUX: >
           auditwheel repair -w {dest_dir} {wheel};
-          bash $PROJ_DIR/ci-utils/after-build.sh
+          bash $ACTION_SCRIPTS_DIR/after-build.sh
         CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: >
           cp {wheel} {dest_dir} &
-          bash %PROJ_DIR%/ci-utils/after-build.sh
+          bash %ACTION_SCRIPTS_DIR%/after-build.sh
         CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
           delocate-listdeps {wheel} && delocate-wheel --require-archs \
           {delocate_archs} -w {dest_dir} {wheel};
-          bash $PROJ_DIR/ci-utils/after-build.sh
+          bash $ACTION_SCRIPTS_DIR/after-build.sh
         CIBW_BUILD_VERBOSITY: 1
     - uses: actions/upload-artifact@v3
       with:

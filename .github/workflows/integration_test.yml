@@ -1,0 +1,33 @@
+name: Integration test
+
+on: [pull_request]
+
+concurrency:
+  group: >
+    ${{ github.workflow }} @
+    ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration_test_1:
+    name: Integration test 1 on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, windows-2019, macos-11]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/checkout@v3
+      with:
+        repository: PyO3/setuptools-rust
+        path: setuptools-rust
+        # last version with Python 3.6 support (TODO drop in the future):
+        ref: v1.1.2
+    - name: Copy setuptools-rust Hello World example to current dir
+      run: cp -r setuptools-rust/examples/hello-world/* ./
+    - name: Add pyproject.toml for example
+      run: |
+        echo '[build-system]' > pyproject.toml
+        echo 'requires = ["setuptools", "wheel", "setuptools-rust"]' >> pyproject.toml
+    - name: Run action
+      uses: ./
