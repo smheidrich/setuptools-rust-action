@@ -25,5 +25,9 @@ jobs:
         ref: v1.1.2
     - name: Copy setuptools-rust Hello World example to current dir
       run: cp -r setuptools-rust/examples/hello-world/* ./
+    - name: Add pyproject.toml for example
+      run: |
+        echo '[build-system]' > pyproject.toml
+        echo 'requires = ["setuptools", "wheel", "setuptools-rust"]' >> pyproject.toml
     - name: Run action
       uses: ./
