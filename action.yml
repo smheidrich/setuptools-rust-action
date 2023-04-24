@@ -36,6 +36,7 @@ runs:
       run: >
         echo "MAIN_DIR=$PWD" >> "$GITHUB_ENV";
         echo "OUTER_HOME=$HOME" >> "$GITHUB_ENV";
+        echo "SETUPTOOLS_RUST_ACTION_PATH=$GITHUB_ACTION_PATH" >> "$GITHUB_ENV";
         cat "$GITHUB_ENV"
       shell: bash
     - name: Build wheels
@@ -44,7 +45,7 @@ runs:
         CIBW_SKIP: >
           *musllinux*
         CIBW_ENVIRONMENT_LINUX: >
-          ACTION_SCRIPTS_DIR="/host/${{ github.action_path }}"
+          ACTION_SCRIPTS_DIR="/host/${{ env.SETUPTOOLS_RUST_ACTION_PATH }}"
           HOST_HOME_DIR="/host/${{ env.OUTER_HOME }}"
           HOST_PROJ_DIR="/host/${{ env.MAIN_DIR }}"
           PROJ_DIR="/project"
@@ -57,7 +58,7 @@ runs:
           CARGO_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.cargo"
           RUSTUP_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.rustup"
         CIBW_ENVIRONMENT_MACOS: >
-          ACTION_SCRIPTS_DIR="$GITHUB_ACTION_PATH"
+          ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
@@ -70,7 +71,7 @@ runs:
           CARGO_HOME_UNIX="$HOME/.cargo"
           RUSTUP_HOME_UNIX="$HOME/.rustup"
         CIBW_ENVIRONMENT_WINDOWS: >
-          ACTION_SCRIPTS_DIR="$GITHUB_ACTION_PATH"
+          ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
