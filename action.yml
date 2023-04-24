@@ -57,7 +57,7 @@ runs:
           CARGO_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.cargo"
           RUSTUP_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.rustup"
         CIBW_ENVIRONMENT_MACOS: >
-          ACTION_SCRIPTS_DIR="${{ github.action_path }}"
+          ACTION_SCRIPTS_DIR="$GITHUB_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
@@ -70,7 +70,7 @@ runs:
           CARGO_HOME_UNIX="$HOME/.cargo"
           RUSTUP_HOME_UNIX="$HOME/.rustup"
         CIBW_ENVIRONMENT_WINDOWS: >
-          ACTION_SCRIPTS_DIR="${{ github.action_path }}"
+          ACTION_SCRIPTS_DIR="$GITHUB_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
           HOST_PROJ_DIR="$GITHUB_WORKSPACE"
           PROJ_DIR="$GITHUB_WORKSPACE"
