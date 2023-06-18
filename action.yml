@@ -57,6 +57,7 @@ runs:
           HOST_HOME_DIR_UNIX="/host/${{ env.OUTER_HOME }}"
           CARGO_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.cargo"
           RUSTUP_HOME_UNIX="/host/${{ env.OUTER_HOME }}/.rustup"
+          CARGO_TARGET_DIR_UNIX="/host/${{ env.OUTER_HOME }}/target"
         CIBW_ENVIRONMENT_MACOS: >
           ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
@@ -70,6 +71,7 @@ runs:
           HOST_HOME_DIR_UNIX="$HOME"
           CARGO_HOME_UNIX="$HOME/.cargo"
           RUSTUP_HOME_UNIX="$HOME/.rustup"
+          CARGO_TARGET_DIR_UNIX="$HOME/target"
         CIBW_ENVIRONMENT_WINDOWS: >
           ACTION_SCRIPTS_DIR="$SETUPTOOLS_RUST_ACTION_PATH"
           HOST_HOME_DIR="$HOME"
@@ -83,6 +85,7 @@ runs:
           HOST_HOME_DIR_UNIX="${{ env.OUTER_HOME }}"
           CARGO_HOME_UNIX="${{ env.OUTER_HOME }}/.cargo"
           RUSTUP_HOME_UNIX="${{ env.OUTER_HOME }}/.rustup"
+          CARGO_TARGET_DIR_UNIX="${ env.OUTER_HOME }}/target"
         CIBW_ARCHS_MACOS: "x86_64 arm64"
         CIBW_BEFORE_BUILD_LINUX: >
           bash $ACTION_SCRIPTS_DIR/before-build-linux.sh
